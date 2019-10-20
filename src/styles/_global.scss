@@ -2,36 +2,107 @@
   font-family: $font;
 }
 
+#app {
+  width: 700px;
+  margin: 0 auto;
+}
+
 .heading {
   font-family: $font-heading;
   text-align: center;
-  margin-top: 70px;
+  margin: 50px 0 30px;
 }
 
-.gameboard-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-}
 .gameboard {
-  border: 2px solid $color-main;
-  width: 800px;
-  height: 500px;
   display: flex;
   flex-wrap: wrap;
 }
 
 .spot-wrap {
   margin: 3px;
+  @for $i from 13 through 24 {
+    &:nth-of-type(24n+#{$i}) {
+      position: relative;
+      left: 27px;
+      bottom: 15px;
+      margin-bottom: -27px;
+    }
+  }
 }
 .spot {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
   &.empty {
-    @include hexagon($spot-size, $gray-20);
+    @include hexagon($color-spot);
   }
-  &.player-1 {
-    @include hexagon($spot-size, red);
+  &.p1 {
+    @include hexagon($color-p1);
+    &:hover {
+      @include hexagon($color-p1);
+    }
   }
-  &.player-2 {
-    @include hexagon($spot-size, blue);
+  &.p2 {
+    @include hexagon($color-p2);
+    &:hover {
+      @include hexagon($color-p2);
+    }
   }
+  &.test {
+    @include hexagon(yellow);
+  }
+  &:hover {
+    @include hexagon($gray-40);
+  }
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  .turn {
+    cursor: default;
+    transition: none;
+    &:before,
+    &:after {
+      transition: none;
+    }
+  }
+  [class*='score'] {
+    display: flex;
+    flex-direction: column;
+    color: $gray-40;
+    font-size: 20px;
+  }
+  .score-p1 {
+    .heading,
+    .value {
+      color: $color-p1;
+    }
+  }
+  .score-p2 {
+    .heading,
+    .value {
+      color: $color-p2;
+    }
+  }
+  .heading {
+    margin: 0;
+  }
+  .value {
+    color: $color-main;
+  }
+}
+
+.key {
+  position: absolute;
+  bottom: -10px;
+  z-index: 9;
+  font-size: 12px;
+  color: #000;
 }

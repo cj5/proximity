@@ -1,9 +1,10 @@
-@mixin hexagon($width, $color) {
+@mixin hexagon($color, $width: $spot-size) {
   position: relative;
   width: $width; 
   height: $width * 0.577;
   background-color: $color;
   margin: ($width * 0.289) 0;
+  @include trans;
   &:before,
   &:after {
     content: "";
@@ -11,6 +12,7 @@
     width: 0;
     border-left: ($width * 0.5) solid transparent;
     border-right: ($width * 0.5) solid transparent;
+    @include trans;
   }
 
   &:before {
@@ -23,4 +25,8 @@
     width: 0;
     border-top: ($width * 0.289) solid $color;
   }
+}
+
+@mixin trans {
+  transition: all 0.2s ease-in-out;
 }

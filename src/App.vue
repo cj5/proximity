@@ -2,16 +2,19 @@
   <div id="app">
     <h1 class="heading">Proximity</h1>
     <Gameboard />
+    <Scoreboard />
   </div>
 </template>
 
 <script>
 import Gameboard from './components/Gameboard'
+import Scoreboard from './components/Scoreboard'
 
 export default {
   name: 'app',
   components: {
-    Gameboard
+    Gameboard,
+    Scoreboard
   }
 }
 </script>
