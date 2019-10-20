@@ -1,0 +1,37 @@
+* {
+  font-family: $font;
+}
+
+.heading {
+  font-family: $font-heading;
+  text-align: center;
+  margin-top: 70px;
+}
+
+.gameboard-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+.gameboard {
+  border: 2px solid $color-main;
+  width: 800px;
+  height: 500px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.spot-wrap {
+  margin: 3px;
+}
+.spot {
+  &.empty {
+    @include hexagon($spot-size, $gray-20);
+  }
+  &.player-1 {
+    @include hexagon($spot-size, red);
+  }
+  &.player-2 {
+    @include hexagon($spot-size, blue);
+  }
+}
