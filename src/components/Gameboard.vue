@@ -1,6 +1,7 @@
 <template>
   <div class="gameboard">
-    <Spot v-for="(i, key) in 120" :key="key" :dataKey="key" />
+    <Spot 
+      v-for="(i, key) in 120" :key="key" :dataKey="key"/>
   </div>
 </template>
 

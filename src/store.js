@@ -33,9 +33,6 @@ export default new Vuex.Store({
           }
         }
       }
-      
-      createValuesArray('valuesP1')
-      createValuesArray('valuesP2')
 
       const shuffle = (array) => {
         let currentIndex = array.length, temporaryValue, randomIndex;
@@ -50,6 +47,8 @@ export default new Vuex.Store({
         return array;
       }
 
+      createValuesArray('valuesP1')
+      createValuesArray('valuesP2')
       state.valuesP1 = shuffle(valuesP1)
       state.valuesP2 = shuffle(valuesP2)
 
@@ -59,31 +58,25 @@ export default new Vuex.Store({
       state.turnValue = state.valuesP1[state.turnP1 - 1]
     },
     moveP1(state, spot) {
-      console.log('moveP1')
       event.target.classList.replace('empty', 'p1')
-      event.target.textContent = state.valuesP1[state.turnP1 - 1]
       let placementInfo = {
         owner: 'p1',
         value: state.valuesP1[state.turnP1 - 1]
       }
-      state.placements[spot] = placementInfo
+      state.placements.splice(spot, 1, placementInfo)
       console.log(state.placements)
-      console.log(state.turnP1)
       state.turnValue = state.valuesP2[state.turnP2 - 1]
       state.turnClass = 'p2'
       state.turnP1++
     },
     moveP2(state, spot) {
-      console.log('moveP2')
       event.target.classList.replace('empty', 'p2')
-      event.target.textContent = state.valuesP2[state.turnP2 - 1]
       let placementInfo = {
         owner: 'p2',
         value: state.valuesP2[state.turnP2 - 1]
       }
-      state.placements[spot] = placementInfo
+      state.placements.splice(spot, 1, placementInfo)
       console.log(state.placements)
-      console.log(state.turnP2)
       state.turnValue = state.valuesP1[state.turnP1 - 1]
       state.turnClass = 'p1'
       state.turnP2++
@@ -102,31 +95,16 @@ export default new Vuex.Store({
       state.spotsP1 = placedP1.length
       state.spotsP2 = placedP2.length
     },
-    updateSurrounding(state, spot) {
-      const surrounding1 = [-12, -11, -1, 1, 12, 13]
-      const surrounding2 = [-13, -12, -1, 1, 11, 12]
-      if (
-        spot >= 0 && spot <= 11 ||
-        spot >= 24 && spot <= 35 ||
-        spot >= 48 && spot <= 59 ||
-        spot >= 72 && spot <= 83 ||
-        spot >= 96 && spot <= 107
-      ) {
-        for (let i = 0; i < surrounding2.length; i++) {
-          let key = +spot + +surrounding2[i]
-          let el = document.querySelector(`[data-key="${key}"`)
-          if (state.testMode) {
-            el.classList.add('highlight')
-          }
+    updateSurrounding(state, key) {
+      let el = document.querySelector(`[data-key="${key}"`)
+      if (state.placements[key]) {
+        console.log(state.placements[key])
+        if (state.placements[key].owner === 'p1') {
+          console.log(state.placements[key].owner)
         }
-      } else {
-        for (let i = 0; i < surrounding1.length; i++) {
-          let key = +spot + +surrounding1[i]
-          let el = document.querySelector(`[data-key="${key}"`)
-          if (state.testMode) {
-            el.classList.add('highlight')
-          }
-        }
+      }
+      if (state.testMode) {
+        el.classList.add('highlight')
       }
     }
   },
@@ -134,27 +112,39 @@ export default new Vuex.Store({
     initValues({ commit }) {
       commit('initValues')
     },
-    move({ commit }) {
+    move({ commit, state }) {
       let spot = event.target.dataset.key
       if (event.target.classList.contains('empty')) {
-        if (this.state.turn % 2) {
+        if (state.turn % 2) {
           commit('moveP1', spot)
         } else {
           commit('moveP2', spot)
         }
         commit('incrementTurn')
         commit('scoring')
-        commit('updateSurrounding', spot)        
+        const surrounding1 = [-12, -11, -1, 1, 12, 13]
+        const surrounding2 = [-13, -12, -1, 1, 11, 12]
+        if (
+          spot >= 0 && spot <= 11 ||
+          spot >= 24 && spot <= 35 ||
+          spot >= 48 && spot <= 59 ||
+          spot >= 72 && spot <= 83 ||
+          spot >= 96 && spot <= 107
+        ) {
+          for (let i = 0; i < surrounding2.length; i++) {
+            let key = +spot + +surrounding2[i]
+            commit('updateSurrounding', key)
+          }
+        } else {
+          for (let i = 0; i < surrounding1.length; i++) {
+            let key = +spot + +surrounding1[i]
+            commit('updateSurrounding', key)
+          }
+        }
       }
     },
     incrementTurn({ commit }) {
       commit('incrementTurn')
-    },
-    incrementTurnP1({ commit }) {
-      commit('incrementTurnP1')
-    },
-    incrementTurnP2({ commit }) {
-      commit('incrementTurnP2')
     }
   }
 })

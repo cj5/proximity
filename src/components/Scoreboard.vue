@@ -38,15 +38,6 @@
 
 <script>
 export default {
-  name: 'Scoreboard',
-  computed: {
-    turnClass() {
-      if (this.$store.state.turn % 2) {
-        return 'p1'
-      } else {
-        return 'p2'
-      }
-    }
-  }
+  name: 'Scoreboard'
 }
 </script>
