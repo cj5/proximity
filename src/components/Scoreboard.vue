@@ -2,13 +2,13 @@
   <div class="scoreboard">
     <div class="score-p1">
       <span class="heading">Player 1</span>
-      <span>Territories: <span class="value">{{ this.$store.state.territoriesP1 }}</span></span>
+      <span>Spots: <span class="value">{{ this.$store.state.spotsP1 }}</span></span>
       <span>Score: <span class="value">{{ this.$store.state.scoreP1 }}</span></span>
     </div>
     <div class="turn spot" :class="turnClass">{{ turnValue }}</div>
     <div class="score-p2">
       <span class="heading">Player 2</span>
-      <span>Territories: <span class="value">{{ this.$store.state.territoriesP2 }}</span></span>
+      <span>Spots: <span class="value">{{ this.$store.state.spotsP2 }}</span></span>
       <span>Score: <span class="value">{{ this.$store.state.scoreP2 }}</span></span>
     </div>
   </div>

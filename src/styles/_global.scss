@@ -8,9 +8,10 @@
 }
 
 .heading {
+  position: relative;
   font-family: $font-heading;
-  text-align: center;
   margin: 50px 0 30px;
+  text-align: center;
 }
 
 .gameboard {
@@ -39,6 +40,15 @@
   cursor: pointer;
   &.empty {
     @include hexagon($color-spot);
+    &:hover {
+      @include hexagon($gray-40);
+    }
+  }
+  &.highlight {
+    @include hexagon($gray-5);
+    &:hover {
+      @include hexagon($gray-5);
+    }
   }
   &.p1 {
     @include hexagon($color-p1);
@@ -52,19 +62,13 @@
       @include hexagon($color-p2);
     }
   }
-  &.test {
-    @include hexagon(yellow);
-  }
-  &:hover {
-    @include hexagon($gray-40);
-  }
 }
 
 .scoreboard {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 40px;
+  margin: 40px 30px 0;
   .turn {
     cursor: default;
     transition: none;
@@ -76,7 +80,6 @@
   [class*='score'] {
     display: flex;
     flex-direction: column;
-    color: $gray-40;
     font-size: 20px;
   }
   .score-p1 {
@@ -92,10 +95,12 @@
     }
   }
   .heading {
+    font-size: 18px;
     margin: 0;
   }
   .value {
     color: $color-main;
+    font-weight: 500;
   }
 }
 
@@ -105,4 +110,5 @@
   z-index: 9;
   font-size: 12px;
   color: #000;
+  pointer-events: none;
 }
