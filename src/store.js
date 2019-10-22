@@ -95,13 +95,45 @@ export default new Vuex.Store({
       state.spotsP1 = placedP1.length
       state.spotsP2 = placedP2.length
     },
-    updateSurrounding(state, key) {
-      let el = document.querySelector(`[data-key="${key}"`)
-      if (state.placements[key]) {
-        console.log(state.placements[key])
-        if (state.placements[key].owner === 'p1') {
-          console.log(state.placements[key].owner)
+    updateSurrounding(state, surroundingSpot) {
+      let el = document.querySelector(`[data-key="${surroundingSpot}"`)
+      if (state.placements[surroundingSpot]) {
+        console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
+        
+        // INCREMENT SURROUNDING SPOT IF YOURS AND SMALLER
+        if (
+          state.placements[surroundingSpot].owner === 'p1' &&
+          state.placements[event.target.dataset.key].owner === 'p1' &&
+          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+        ) {
+          state.placements[surroundingSpot].value++
         }
+        if (
+          state.placements[surroundingSpot].owner === 'p2' &&
+          state.placements[event.target.dataset.key].owner === 'p2' &&
+          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+        ) {
+          state.placements[surroundingSpot].value++
+        }
+
+        // STEAL SURROUNDING SPOT IF OPPONENT AND SMALLER
+        if (
+          state.placements[surroundingSpot].owner === 'p2' &&
+          state.placements[event.target.dataset.key].owner === 'p1' &&
+          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+        ) {
+          el.classList.replace('p2', 'p1')
+          state.placements[surroundingSpot].owner = 'p1'
+        }
+        if (
+          state.placements[surroundingSpot].owner === 'p1' &&
+          state.placements[event.target.dataset.key].owner === 'p2' &&
+          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+        ) {
+          el.classList.replace('p1', 'p2')
+          state.placements[surroundingSpot].owner = 'p2'
+        }
+
       }
       if (state.testMode) {
         el.classList.add('highlight')
@@ -132,13 +164,15 @@ export default new Vuex.Store({
           spot >= 96 && spot <= 107
         ) {
           for (let i = 0; i < surrounding2.length; i++) {
-            let key = +spot + +surrounding2[i]
-            commit('updateSurrounding', key)
+            let surroundingSpot = +spot + +surrounding2[i]
+            commit('updateSurrounding', surroundingSpot)
+            commit('scoring')
           }
         } else {
           for (let i = 0; i < surrounding1.length; i++) {
-            let key = +spot + +surrounding1[i]
-            commit('updateSurrounding', key)
+            let surroundingSpot = +spot + +surrounding1[i]
+            commit('updateSurrounding', surroundingSpot)
+            commit('scoring')
           }
         }
       }
