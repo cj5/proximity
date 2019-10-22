@@ -69,6 +69,9 @@
   justify-content: space-between;
   align-items: center;
   margin: 40px 30px 0;
+  p {
+    margin: 0;
+  }
   .turn {
     cursor: default;
     transition: none;

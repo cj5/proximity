@@ -15,6 +15,9 @@ export default {
   components: {
     Gameboard,
     Scoreboard
+  },
+  mounted() {
+    this.$store.dispatch('initValues')
   }
 }
 </script>
