@@ -17,7 +17,7 @@ export default new Vuex.Store({
     spotsP2: 0,
     turnValue: 0,
     turnClass: 'p1',
-    testMode: false
+    testMode: true
   },
   mutations: {
     initValues(state) {
@@ -100,38 +100,40 @@ export default new Vuex.Store({
       if (state.placements[surroundingSpot]) {
         console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
         
+        let surrounding = state.placements[surroundingSpot]
+        let target = state.placements[event.target.dataset.key]
         // INCREMENT SURROUNDING SPOT IF YOURS AND SMALLER
         if (
-          state.placements[surroundingSpot].owner === 'p1' &&
-          state.placements[event.target.dataset.key].owner === 'p1' &&
-          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+          surrounding.owner === 'p1' &&
+          target.owner === 'p1' &&
+          surrounding.value < 20
         ) {
-          state.placements[surroundingSpot].value++
+          surrounding.value++
         }
         if (
-          state.placements[surroundingSpot].owner === 'p2' &&
-          state.placements[event.target.dataset.key].owner === 'p2' &&
-          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+          surrounding.owner === 'p2' &&
+          target.owner === 'p2' &&
+          surrounding.value < 20
         ) {
-          state.placements[surroundingSpot].value++
+          surrounding.value++
         }
 
         // STEAL SURROUNDING SPOT IF OPPONENT AND SMALLER
         if (
-          state.placements[surroundingSpot].owner === 'p2' &&
-          state.placements[event.target.dataset.key].owner === 'p1' &&
-          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+          surrounding.owner === 'p2' &&
+          target.owner === 'p1' &&
+          surrounding.value < target.value
         ) {
           el.classList.replace('p2', 'p1')
-          state.placements[surroundingSpot].owner = 'p1'
+          surrounding.owner = 'p1'
         }
         if (
-          state.placements[surroundingSpot].owner === 'p1' &&
-          state.placements[event.target.dataset.key].owner === 'p2' &&
-          state.placements[surroundingSpot].value < state.placements[event.target.dataset.key].value
+          surrounding.owner === 'p1' &&
+          target.owner === 'p2' &&
+          surrounding.value < target.value
         ) {
           el.classList.replace('p1', 'p2')
-          state.placements[surroundingSpot].owner = 'p2'
+          surrounding.owner = 'p2'
         }
 
       }
@@ -146,39 +148,121 @@ export default new Vuex.Store({
     },
     move({ commit, state }) {
       let spot = event.target.dataset.key
+      console.log(spot)
       if (event.target.classList.contains('empty')) {
         if (state.turn % 2) {
           commit('moveP1', spot)
         } else {
           commit('moveP2', spot)
         }
-        commit('incrementTurn')
-        commit('scoring')
+        // THIS NEEDS SOME CLEVER REFACTORING :grimacing:
         const surrounding1 = [-12, -11, -1, 1, 12, 13]
         const surrounding2 = [-13, -12, -1, 1, 11, 12]
+        const surrounding3 = [-1, 1, 11, 12]
+        const surrounding4 = [-11, -12, -1, 1]
+        const surrounding5 = [-12, -11, 1, 12, 13]
+        const surrounding6 = [-12, 1, 12]
+        const surrounding7 = [-12, -1, 12]
+        const surrounding8 = [-13, -12, -1, 11, 12]
+        const surrounding9 = [1, 12] // spot 0
+        const surrounding10 = [-1, 11, 12] // spot 11
+        const surrounding11 = [-12, -11, 1] // spot 108
+        const surrounding12 = [-12, -1] //spot 119
         if (
-          spot >= 0 && spot <= 11 ||
-          spot >= 24 && spot <= 35 ||
-          spot >= 48 && spot <= 59 ||
-          spot >= 72 && spot <= 83 ||
-          spot >= 96 && spot <= 107
+          spot >= 13 && spot <= 22 ||
+          spot >= 37 && spot <= 46 ||
+          spot >= 61 && spot <= 70 ||
+          spot >= 85 && spot <= 94
+        ) {
+          for (let i = 0; i < surrounding1.length; i++) {
+            let surroundingSpot = +spot + +surrounding1[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (
+          spot >= 25 && spot <= 34 ||
+          spot >= 49 && spot <= 58 ||
+          spot >= 73 && spot <= 82 ||
+          spot >= 97 && spot <= 106
         ) {
           for (let i = 0; i < surrounding2.length; i++) {
             let surroundingSpot = +spot + +surrounding2[i]
             commit('updateSurrounding', surroundingSpot)
-            commit('scoring')
           }
-        } else {
-          for (let i = 0; i < surrounding1.length; i++) {
-            let surroundingSpot = +spot + +surrounding1[i]
+        } else if (spot >= 1 && spot <= 10) {
+          for (let i = 0; i < surrounding3.length; i++) {
+            let surroundingSpot = +spot + +surrounding3[i]
             commit('updateSurrounding', surroundingSpot)
-            commit('scoring')
+          }
+        } else if (spot >= 109 && spot <= 118) {
+          for (let i = 0; i < surrounding4.length; i++) {
+            let surroundingSpot = +spot + +surrounding4[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (
+          spot == 12 ||
+          spot == 36 ||
+          spot == 60 ||
+          spot == 84
+        ) {
+          for (let i = 0; i < surrounding5.length; i++) {
+            let surroundingSpot = +spot + +surrounding5[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (
+          spot == 24 ||
+          spot == 48 ||
+          spot == 72 ||
+          spot == 96
+        ) {
+          for (let i = 0; i < surrounding6.length; i++) {
+            let surroundingSpot = +spot + +surrounding6[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (
+          spot == 23 ||
+          spot == 47 ||
+          spot == 71 ||
+          spot == 95
+        ) {
+          for (let i = 0; i < surrounding7.length; i++) {
+            let surroundingSpot = +spot + +surrounding7[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (
+          spot == 35 ||
+          spot == 59 ||
+          spot == 83 ||
+          spot == 107
+        ) {
+          for (let i = 0; i < surrounding8.length; i++) {
+            let surroundingSpot = +spot + +surrounding8[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (spot == 0) {
+          console.log('hello?')
+          for (let i = 0; i < surrounding9.length; i++) {
+            let surroundingSpot = +spot + +surrounding9[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (spot == 11) {
+          for (let i = 0; i < surrounding10.length; i++) {
+            let surroundingSpot = +spot + +surrounding10[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (spot == 108) {
+          for (let i = 0; i < surrounding11.length; i++) {
+            let surroundingSpot = +spot + +surrounding11[i]
+            commit('updateSurrounding', surroundingSpot)
+          }
+        } else if (spot == 119) {
+          for (let i = 0; i < surrounding12.length; i++) {
+            let surroundingSpot = +spot + +surrounding12[i]
+            commit('updateSurrounding', surroundingSpot)
           }
         }
+        commit('scoring')
+        commit('incrementTurn')
       }
-    },
-    incrementTurn({ commit }) {
-      commit('incrementTurn')
     }
   }
 })

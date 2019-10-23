@@ -46,9 +46,6 @@
   }
   &.highlight {
     @include hexagon($gray-5);
-    &:hover {
-      @include hexagon($gray-5);
-    }
   }
   &.p1 {
     @include hexagon($color-p1);
@@ -109,9 +106,18 @@
 
 .key {
   position: absolute;
-  bottom: -10px;
+  bottom: -7px;
   z-index: 9;
   font-size: 12px;
+  line-height: 12px;
   color: #000;
+  padding: 0 2px;
+  border-radius: 2px;
   pointer-events: none;
+}
+.p1,
+.p2 {
+  .key {
+    background-color: rgba(#fff, 0.7);
+  }
 }
