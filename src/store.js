@@ -32,25 +32,25 @@ export default new Vuex.Store({
             window[array].push(i - 40)
           }
         }
+        return window[array]
       }
 
+      // FISHER-YATES SHUFFLE
       const shuffle = (array) => {
-        let currentIndex = array.length, temporaryValue, randomIndex;
-        while (0 !== currentIndex) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex -= 1;
+        let i = array.length, temp, random
+        while (0 !== i) {
+          random = Math.floor(Math.random() * i)
+          i -= 1
 
-          temporaryValue = array[currentIndex];
-          array[currentIndex] = array[randomIndex];
-          array[randomIndex] = temporaryValue;
+          temp = array[i]
+          array[i] = array[random]
+          array[random] = temp
         }
-        return array;
+        return array
       }
 
-      createValuesArray('valuesP1')
-      createValuesArray('valuesP2')
-      state.valuesP1 = shuffle(valuesP1)
-      state.valuesP2 = shuffle(valuesP2)
+      state.valuesP1 = shuffle(createValuesArray('valuesP1'))
+      state.valuesP2 = shuffle(createValuesArray('valuesP2'))
 
       console.log(state.valuesP1)
       console.log(state.valuesP2)

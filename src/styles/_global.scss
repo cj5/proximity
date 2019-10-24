@@ -1,5 +1,6 @@
 * {
   font-family: $font;
+  color: $color-main;
 }
 
 #app {
@@ -38,6 +39,9 @@
   font-size: 20px;
   color: #fff;
   cursor: pointer;
+  * {
+    color: #fff;
+  }
   &.empty {
     @include hexagon($color-spot);
     &:hover {
@@ -45,7 +49,7 @@
     }
   }
   &.highlight {
-    @include hexagon($gray-5);
+    @include hexagon($gray-10);
   }
   &.p1 {
     @include hexagon($color-p1);
@@ -110,7 +114,7 @@
   z-index: 9;
   font-size: 12px;
   line-height: 12px;
-  color: #000;
+  color: $color-main;
   padding: 0 2px;
   border-radius: 2px;
   pointer-events: none;
