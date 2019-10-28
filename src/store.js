@@ -17,7 +17,8 @@ export default new Vuex.Store({
     spotsP2: 0,
     turnValue: 0,
     turnClass: 'p1',
-    testMode: true
+    gameResult: '',
+    testMode: false
   },
   mutations: {
     initValues(state) {
@@ -83,6 +84,7 @@ export default new Vuex.Store({
     },
     incrementTurn(state) {
       state.turn++
+      console.log('turn:', state.turn)
     },
     scoring(state) {
       let placed = state.placements.filter(x => x)
@@ -95,6 +97,17 @@ export default new Vuex.Store({
       state.spotsP1 = placedP1.length
       state.spotsP2 = placedP2.length
     },
+    decideWinner(state) {
+      console.log('game over')
+      if (state.scoreP2 > state.scoreP1) {
+        state.turnClass = 'p2'
+      } else if (state.scoreP1 === state.scoreP2) {
+        state.turnClass = 'empty'
+      }
+      state.scoreP1 === state.scoreP2
+        ? state.gameResult = 'Tie game'
+        : state.gameResult = 'Winner'
+    },
     updateSurrounding(state, surroundingSpot) {
       let el = document.querySelector(`[data-key="${surroundingSpot}"`)
       if (state.placements[surroundingSpot]) {
@@ -102,7 +115,7 @@ export default new Vuex.Store({
         
         let surrounding = state.placements[surroundingSpot]
         let target = state.placements[event.target.dataset.key]
-        // INCREMENT SURROUNDING SPOT IF YOURS AND SMALLER
+        // INCREMENT SURROUNDING SPOT IF YOURS
         if (
           surrounding.owner === 'p1' &&
           target.owner === 'p1' &&
@@ -239,7 +252,6 @@ export default new Vuex.Store({
             commit('updateSurrounding', surroundingSpot)
           }
         } else if (spot == 0) {
-          console.log('hello?')
           for (let i = 0; i < surrounding9.length; i++) {
             let surroundingSpot = +spot + +surrounding9[i]
             commit('updateSurrounding', surroundingSpot)
@@ -262,6 +274,9 @@ export default new Vuex.Store({
         }
         commit('scoring')
         commit('incrementTurn')
+        if (state.turn > 120) {
+          commit('decideWinner')
+        }
       }
     }
   }
