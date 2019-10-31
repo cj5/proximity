@@ -14,12 +14,10 @@
     border-right: ($width * 0.5) solid transparent;
     @include trans;
   }
-
   &:before {
     bottom: 100%;
     border-bottom: ($width * 0.289) solid $color;
   }
-
   &:after {
     top: 100%;
     width: 0;

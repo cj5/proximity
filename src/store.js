@@ -18,7 +18,7 @@ export default new Vuex.Store({
     turnValue: 0,
     turnClass: 'p1',
     gameResult: '',
-    testMode: false
+    testMode: true
   },
   mutations: {
     initValues(state) {
@@ -38,12 +38,12 @@ export default new Vuex.Store({
 
       // FISHER-YATES SHUFFLE
       const shuffle = (array) => {
-        let i = array.length, temp, random
-        while (0 !== i) {
-          random = Math.floor(Math.random() * i)
+        let i = array.length
+        while (i !== 0) {
+          let random = Math.floor(Math.random() * i)
           i -= 1
 
-          temp = array[i]
+          let temp = array[i]
           array[i] = array[random]
           array[random] = temp
         }
@@ -65,7 +65,7 @@ export default new Vuex.Store({
         value: state.valuesP1[state.turnP1 - 1]
       }
       state.placements.splice(spot, 1, placementInfo)
-      console.log(state.placements)
+      // console.log(state.placements)
       state.turnValue = state.valuesP2[state.turnP2 - 1]
       state.turnClass = 'p2'
       state.turnP1++
@@ -77,14 +77,25 @@ export default new Vuex.Store({
         value: state.valuesP2[state.turnP2 - 1]
       }
       state.placements.splice(spot, 1, placementInfo)
-      console.log(state.placements)
+      // console.log(state.placements)
       state.turnValue = state.valuesP1[state.turnP1 - 1]
       state.turnClass = 'p1'
       state.turnP2++
     },
+    computerMove(state) {
+      console.log('computerMove()')
+      for (let i = 0; i < state.placements.length; i++) {
+        if (state.placements[i]) {
+          console.log(
+            `spot_${i}:`,
+            `(${state.placements[i].owner},`,
+            `${state.placements[i].value})`
+          )
+        }
+      }
+    },
     incrementTurn(state) {
       state.turn++
-      console.log('turn:', state.turn)
     },
     scoring(state) {
       let placed = state.placements.filter(x => x)
@@ -111,7 +122,7 @@ export default new Vuex.Store({
     updateSurrounding(state, surroundingSpot) {
       let el = document.querySelector(`[data-key="${surroundingSpot}"`)
       if (state.placements[surroundingSpot]) {
-        console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
+        // console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
         
         let surrounding = state.placements[surroundingSpot]
         let target = state.placements[event.target.dataset.key]
@@ -161,12 +172,12 @@ export default new Vuex.Store({
     },
     move({ commit, state }) {
       let spot = event.target.dataset.key
-      console.log(spot)
       if (event.target.classList.contains('empty')) {
         if (state.turn % 2) {
           commit('moveP1', spot)
         } else {
           commit('moveP2', spot)
+          commit('computerMove')
         }
         // THIS NEEDS SOME CLEVER REFACTORING :grimacing:
         const surrounding1 = [-12, -11, -1, 1, 12, 13]
@@ -180,104 +191,71 @@ export default new Vuex.Store({
         const surrounding9 = [1, 12] // spot 0
         const surrounding10 = [-1, 11, 12] // spot 11
         const surrounding11 = [-12, -11, 1] // spot 108
-        const surrounding12 = [-12, -1] //spot 119
-        if (
-          spot >= 13 && spot <= 22 ||
-          spot >= 37 && spot <= 46 ||
-          spot >= 61 && spot <= 70 ||
-          spot >= 85 && spot <= 94
-        ) {
-          for (let i = 0; i < surrounding1.length; i++) {
-            let surroundingSpot = +spot + +surrounding1[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (
-          spot >= 25 && spot <= 34 ||
-          spot >= 49 && spot <= 58 ||
-          spot >= 73 && spot <= 82 ||
-          spot >= 97 && spot <= 106
-        ) {
-          for (let i = 0; i < surrounding2.length; i++) {
-            let surroundingSpot = +spot + +surrounding2[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot >= 1 && spot <= 10) {
-          for (let i = 0; i < surrounding3.length; i++) {
-            let surroundingSpot = +spot + +surrounding3[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot >= 109 && spot <= 118) {
-          for (let i = 0; i < surrounding4.length; i++) {
-            let surroundingSpot = +spot + +surrounding4[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (
-          spot == 12 ||
-          spot == 36 ||
-          spot == 60 ||
-          spot == 84
-        ) {
-          for (let i = 0; i < surrounding5.length; i++) {
-            let surroundingSpot = +spot + +surrounding5[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (
-          spot == 24 ||
-          spot == 48 ||
-          spot == 72 ||
-          spot == 96
-        ) {
-          for (let i = 0; i < surrounding6.length; i++) {
-            let surroundingSpot = +spot + +surrounding6[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (
-          spot == 23 ||
-          spot == 47 ||
-          spot == 71 ||
-          spot == 95
-        ) {
-          for (let i = 0; i < surrounding7.length; i++) {
-            let surroundingSpot = +spot + +surrounding7[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (
-          spot == 35 ||
-          spot == 59 ||
-          spot == 83 ||
-          spot == 107
-        ) {
-          for (let i = 0; i < surrounding8.length; i++) {
-            let surroundingSpot = +spot + +surrounding8[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot == 0) {
-          for (let i = 0; i < surrounding9.length; i++) {
-            let surroundingSpot = +spot + +surrounding9[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot == 11) {
-          for (let i = 0; i < surrounding10.length; i++) {
-            let surroundingSpot = +spot + +surrounding10[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot == 108) {
-          for (let i = 0; i < surrounding11.length; i++) {
-            let surroundingSpot = +spot + +surrounding11[i]
-            commit('updateSurrounding', surroundingSpot)
-          }
-        } else if (spot == 119) {
-          for (let i = 0; i < surrounding12.length; i++) {
-            let surroundingSpot = +spot + +surrounding12[i]
+        const surrounding12 = [-12, -1] // spot 119
+        const surroundingSpot = (array) => {
+          for (let i = 0; i < array.length; i++) {
+            let surroundingSpot = +spot + +array[i]
             commit('updateSurrounding', surroundingSpot)
           }
         }
+        const checkSpots = (array, min, max, statement = true) => {
+          switch(statement) {
+          case (spot >= min && spot <= max):
+            return surroundingSpot(array)
+          }
+          if (max === undefined) {
+            switch(statement) {
+            case (spot == min): 
+              return surroundingSpot(array)
+            }
+          }
+        }
+
+        checkSpots(surrounding1, 13, 22)
+        checkSpots(surrounding1, 37, 46)
+        checkSpots(surrounding1, 61, 70)
+        checkSpots(surrounding1, 85, 94)
+
+        checkSpots(surrounding2, 25, 34)
+        checkSpots(surrounding2, 49, 58)
+        checkSpots(surrounding2, 73, 82)
+        checkSpots(surrounding2, 97, 106)
+
+        checkSpots(surrounding3, 1, 10)
+
+        checkSpots(surrounding4, 109, 118)
+
+        checkSpots(surrounding5, 12)
+        checkSpots(surrounding5, 36)
+        checkSpots(surrounding5, 60)
+        checkSpots(surrounding5, 84)
+
+        checkSpots(surrounding6, 24)
+        checkSpots(surrounding6, 48)
+        checkSpots(surrounding6, 72)
+        checkSpots(surrounding6, 96)
+
+        checkSpots(surrounding7, 23)
+        checkSpots(surrounding7, 47)
+        checkSpots(surrounding7, 71)
+        checkSpots(surrounding7, 95)
+
+        checkSpots(surrounding8, 35)
+        checkSpots(surrounding8, 59)
+        checkSpots(surrounding8, 83)
+        checkSpots(surrounding8, 107)
+
+        checkSpots(surrounding9, 0)
+        checkSpots(surrounding10, 11)
+        checkSpots(surrounding11, 108)
+        checkSpots(surrounding12, 119)
+
         commit('scoring')
         commit('incrementTurn')
         if (state.turn > 120) {
           commit('decideWinner')
         }
       }
-    }
+    } // move()
   }
 })
