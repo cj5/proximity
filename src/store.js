@@ -179,7 +179,7 @@ export default new Vuex.Store({
           commit('moveP2', spot)
           commit('computerMove')
         }
-        // THIS NEEDS SOME CLEVER REFACTORING :grimacing:
+        // GETTING STONGER ♫ Rocky Theme Tune ♫
         const surrounding1 = [-12, -11, -1, 1, 12, 13]
         const surrounding2 = [-13, -12, -1, 1, 11, 12]
         const surrounding3 = [-1, 1, 11, 12]
