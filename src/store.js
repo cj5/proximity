@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import spotsModel from './spotsModel'
 
 Vue.use(Vuex)
 
@@ -179,76 +180,30 @@ export default new Vuex.Store({
           commit('moveP2', spot)
           commit('computerMove')
         }
-        // GETTING STONGER ♫ Rocky Theme Tune ♫
-        const surrounding1 = [-12, -11, -1, 1, 12, 13]
-        const surrounding2 = [-13, -12, -1, 1, 11, 12]
-        const surrounding3 = [-1, 1, 11, 12]
-        const surrounding4 = [-11, -12, -1, 1]
-        const surrounding5 = [-12, -11, 1, 12, 13]
-        const surrounding6 = [-12, 1, 12]
-        const surrounding7 = [-12, -1, 12]
-        const surrounding8 = [-13, -12, -1, 11, 12]
-        const surrounding9 = [1, 12] // spot 0
-        const surrounding10 = [-1, 11, 12] // spot 11
-        const surrounding11 = [-12, -11, 1] // spot 108
-        const surrounding12 = [-12, -1] // spot 119
+        
         const surroundingSpot = (array) => {
-          for (let i = 0; i < array.length; i++) {
-            let surroundingSpot = +spot + +array[i]
+          array.map(z => {
+            let surroundingSpot = +spot + z
             commit('updateSurrounding', surroundingSpot)
-          }
-        }
-        const checkSpots = (array, min, max, statement = true) => {
-          switch(statement) {
-          case (spot >= min && spot <= max):
-            return surroundingSpot(array)
-          }
-          if (max === undefined) {
-            switch(statement) {
-            case (spot == min): 
-              return surroundingSpot(array)
-            }
-          }
+          })
         }
 
-        checkSpots(surrounding1, 13, 22)
-        checkSpots(surrounding1, 37, 46)
-        checkSpots(surrounding1, 61, 70)
-        checkSpots(surrounding1, 85, 94)
-
-        checkSpots(surrounding2, 25, 34)
-        checkSpots(surrounding2, 49, 58)
-        checkSpots(surrounding2, 73, 82)
-        checkSpots(surrounding2, 97, 106)
-
-        checkSpots(surrounding3, 1, 10)
-
-        checkSpots(surrounding4, 109, 118)
-
-        checkSpots(surrounding5, 12)
-        checkSpots(surrounding5, 36)
-        checkSpots(surrounding5, 60)
-        checkSpots(surrounding5, 84)
-
-        checkSpots(surrounding6, 24)
-        checkSpots(surrounding6, 48)
-        checkSpots(surrounding6, 72)
-        checkSpots(surrounding6, 96)
-
-        checkSpots(surrounding7, 23)
-        checkSpots(surrounding7, 47)
-        checkSpots(surrounding7, 71)
-        checkSpots(surrounding7, 95)
-
-        checkSpots(surrounding8, 35)
-        checkSpots(surrounding8, 59)
-        checkSpots(surrounding8, 83)
-        checkSpots(surrounding8, 107)
-
-        checkSpots(surrounding9, 0)
-        checkSpots(surrounding10, 11)
-        checkSpots(surrounding11, 108)
-        checkSpots(surrounding12, 119)
+        spotsModel.map(x => {
+          if (x.spotRanges) {
+            x.spotRanges.map(y => {
+              if (spot >= y.min && spot <= y.max) {
+                surroundingSpot(x.surrounding)
+              }
+            }) 
+          }
+          if (x.spots) {
+            x.spots.map(y => {
+              if (spot == y) {
+                surroundingSpot(x.surrounding)
+              }
+            })
+          }
+        })
 
         commit('scoring')
         commit('incrementTurn')
