@@ -82,18 +82,21 @@ export default new Vuex.Store({
       state.turnValue = state.valuesP1[state.turnP1 - 1]
       state.turnClass = 'p1'
       state.turnP2++
+      console.log('-----------')
     },
+    // checkSurrounding() {
+
+    // },
     computerMove(state) {
-      console.log('computerMove()')
-      for (let i = 0; i < state.placements.length; i++) {
-        if (state.placements[i]) {
-          console.log(
-            `spot_${i}:`,
-            `(${state.placements[i].owner},`,
-            `${state.placements[i].value})`
-          )
+      state.placements.map((x, spot) => {
+        let bestMove
+        if (x) {
+          console.log(`<${spot}>: ${x.owner}, ${x.value}`)
         }
-      }
+        // if (!x) {
+        //   console.log(`<${spot}>`)
+        // }
+      })
     },
     incrementTurn(state) {
       state.turn++
@@ -195,8 +198,7 @@ export default new Vuex.Store({
                 surroundingSpot(x.surrounding)
               }
             }) 
-          }
-          if (x.spots) {
+          } else if (x.spots) {
             x.spots.map(y => {
               if (spot == y) {
                 surroundingSpot(x.surrounding)
