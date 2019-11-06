@@ -83,18 +83,6 @@ export default new Vuex.Store({
       state.turnClass = 'p1'
       state.turnP2++
     },
-    computerMove(state) {
-      console.log('computerMove()')
-      for (let i = 0; i < state.placements.length; i++) {
-        if (state.placements[i]) {
-          console.log(
-            `spot_${i}:`,
-            `(${state.placements[i].owner},`,
-            `${state.placements[i].value})`
-          )
-        }
-      }
-    },
     incrementTurn(state) {
       state.turn++
     },
@@ -123,7 +111,7 @@ export default new Vuex.Store({
     updateSurrounding(state, surroundingSpot) {
       let el = document.querySelector(`[data-key="${surroundingSpot}"`)
       if (state.placements[surroundingSpot]) {
-        // console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
+        console.log(JSON.stringify(state.placements[surroundingSpot], null, 2))
         
         let surrounding = state.placements[surroundingSpot]
         let target = state.placements[event.target.dataset.key]
@@ -178,7 +166,6 @@ export default new Vuex.Store({
           commit('moveP1', spot)
         } else {
           commit('moveP2', spot)
-          commit('computerMove')
         }
         
         const surroundingSpot = (array) => {
@@ -195,8 +182,7 @@ export default new Vuex.Store({
                 surroundingSpot(x.surrounding)
               }
             }) 
-          }
-          if (x.spots) {
+          } else if (x.spots) {
             x.spots.map(y => {
               if (spot == y) {
                 surroundingSpot(x.surrounding)
