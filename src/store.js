@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import spotsModel from './spotsModel'
+import io from 'socket.io-client'
+
+const socket = io('http://localhost:3000')
 
 Vue.use(Vuex)
 
@@ -50,14 +53,25 @@ export default new Vuex.Store({
         }
         return array
       }
+      const valuesP1 = shuffle(createValuesArray('valuesP1'))
+      const valuesP2 = shuffle(createValuesArray('valuesP2'))
+      
+      socket.emit('valuesP1', valuesP1)
+      socket.emit('valuesP2', valuesP2)
 
-      state.valuesP1 = shuffle(createValuesArray('valuesP1'))
-      state.valuesP2 = shuffle(createValuesArray('valuesP2'))
+      socket.on('emitData', x => {
+        state.valuesP1 = x.valuesP1,
+        state.valuesP2 = x.valuesP2
+        state.turnValue = state.valuesP1[state.turnP1 - 1]
+      })
 
-      console.log(state.valuesP1)
-      console.log(state.valuesP2)
+      // state.valuesP1 = shuffle(createValuesArray('valuesP1'))
+      // state.valuesP2 = shuffle(createValuesArray('valuesP2'))
 
-      state.turnValue = state.valuesP1[state.turnP1 - 1]
+      // console.log(state.valuesP1)
+      // console.log(state.valuesP2)
+
+      // state.turnValue = state.valuesP1[state.turnP1 - 1]
     },
     moveP1(state, spot) {
       event.target.classList.replace('empty', 'p1')

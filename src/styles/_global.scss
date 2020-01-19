@@ -137,16 +137,21 @@
   }
 }
 
-.test-wrap {
-  position: absolute;
+$status-ht: 12px;
+.server-status {
   display: flex;
-  p {
-    max-width: 160px;
-    margin: 0 0 0 5px;
-    font-size: 12px;
+  align-items: center;
+  height: $status-ht;
+  font-size: $status-ht;
+  line-height: $status-ht;
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  .indicator {
+    width: $status-ht - 4px;
+    height: $status-ht - 4px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    margin: 0 3px 0 6px;
   }
-}
-.test {
-  width: 50px;
-  height: 50px;
 }
