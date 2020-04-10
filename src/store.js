@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import spotsModel from './spotsModel'
 import io from 'socket.io-client'
+import { port } from './global'
 
-const socket = io('http://localhost:3000')
+const socket = io(`http://localhost:${port}`)
 
 Vue.use(Vuex)
 
@@ -79,7 +80,15 @@ export default new Vuex.Store({
         owner: 'p1',
         value: state.valuesP1[state.turnP1 - 1]
       }
-      state.placements.splice(spot, 1, placementInfo)
+
+      socket.emit('placements', state.placements.splice(spot, 1, placementInfo))
+
+      socket.on('emitData', x => {
+        state.placements = x.placements
+        console.log(state.placements)
+      })
+
+      // state.placements.splice(spot, 1, placementInfo)
       // console.log(state.placements)
       state.turnValue = state.valuesP2[state.turnP2 - 1]
       state.turnClass = 'p2'

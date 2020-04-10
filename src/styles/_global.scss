@@ -38,11 +38,11 @@
   align-items: center;
   font-size: 20px;
   color: #fff;
-  cursor: pointer;
   * {
     color: #fff;
   }
   &.empty {
+    cursor: pointer;
     @include hexagon($color-spot);
     &:hover {
       @include hexagon($gray-40);

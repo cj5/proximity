@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon -r esm app.js"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
   },

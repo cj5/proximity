@@ -9,6 +9,7 @@
 <script>
 import io from 'socket.io-client'
 import { mapState } from 'vuex'
+import { port } from '../global'
 
 export default {
   name: 'ServerStatus',
@@ -26,7 +27,7 @@ export default {
     ...mapState(['testMode'])
   },
   created() {
-    this.socket = io('http://localhost:3000')
+    this.socket = io(`http://localhost:${port}`)
   },
   mounted() {
     this.socket.on('emitData', x => {
